@@ -1,30 +1,22 @@
-// Crear nodos y aristas iniciales
-var nodes = new vis.DataSet([
-    { id: 1, label: "Nodo 1" },
-    { id: 2, label: "Nodo 2" },
-    { id: 3, label: "Nodo 3" },
-    { id: 4, label: "Nodo 4" },
-    { id: 5, label: "Nodo 5" },
-]);
+// Array de nodos
+var nodes = new vis.DataSet([]);
 
-var edges = new vis.DataSet([
-    { from: 1, to: 2, label: "Arista 1 - 2", weight: 5 },
-    { from: 2, to: 3, label: "Arista 2 - 3", weight: 4 },
-    { from: 3, to: 4, label: "Arista 3 - 4", weight: 3 },
-    { from: 4, to: 5, label: "Arista 4 - 5", weight: 2 },
-    { from: 5, to: 1, label: "Arista 5 - 1", weight: 1 },
-]);
+// Array de aristas
+var edges = new vis.DataSet([]);
 
-// Crear contenedor y datos para el grafo
+// Obtener el contenedor del grafo
 var container = document.getElementById("grafo");
 
+// Crear datos para el grafo
 var data = {
     nodes: nodes,
     edges: edges,
 };
 
+// Actualizar las opciones para los select usando la función actualizarSelects() si hay datos
 if (data) actualizarSelects();
 
+// Crear opciones de diseño para el grafo
 var options = {
     nodes: {
         shape: "dot",
@@ -42,6 +34,7 @@ var options = {
             align: "middle",
         },
         labelHighlightBold: true,
+        label: edges.weight,
     },
 };
 
@@ -53,6 +46,7 @@ document.getElementById("agregar-nodo").addEventListener("click", () => {
     var id = Number(document.getElementById("id").value);
     var label = `Nodo ${document.getElementById("label").value}`;
 
+    // Validar que los inputs no estén vacíos
     if (!id || !label) return;
 
     nodes.add({ id, label });
@@ -68,9 +62,12 @@ document.getElementById("agregar-arista").addEventListener("click", () => {
     var label = `Arista ${from} - ${to}`;
     var weight = Number(document.getElementById("weight").value);
 
+    // Validar que los inputs no estén vacíos
     if (!from || !to || !label || !weight) return;
 
-    edges.add({ from, to, label, weight });
+    var id = edges.length + 1;
+
+    edges.add({ id, from, to, label, weight });
 
     actualizarSelects();
     limpiarInputs();
@@ -80,8 +77,10 @@ document.getElementById("agregar-arista").addEventListener("click", () => {
 document.getElementById("borrar-node").addEventListener("click", () => {
     var id = Number(document.getElementById("borrar-nodo").value);
 
+    // Validar que los inputs no estén vacíos
     if (!id) return;
 
+    // Remover nodo y aristas que lo contengan
     nodes.remove({ id });
     edges.remove(
         edges.get().filter((edge) => edge.from == id || edge.to == id)
@@ -91,6 +90,25 @@ document.getElementById("borrar-node").addEventListener("click", () => {
 });
 
 // Borrar arista
+document.getElementById("borrar-edge").addEventListener("click", () => {
+    var id = Number(document.getElementById("borrar-arista").value);
+
+    // Validar que los inputs no estén vacíos
+    if (!id) return;
+
+    // Remover arista
+    edges.remove({ id });
+
+    actualizarSelects();
+});
+
+// Borrar todo
+document.getElementById("borrar-todo").addEventListener("click", () => {
+    nodes.clear();
+    edges.clear();
+
+    actualizarSelects();
+});
 
 // Rellenar selects con nuevos datos
 function actualizarSelects() {
@@ -99,16 +117,19 @@ function actualizarSelects() {
     var selectBorrarNodo = document.getElementById("borrar-nodo");
     var selectBorrarArista = document.getElementById("borrar-arista");
 
+    // Vaciar las opciones de los selects
     selectFrom.innerHTML = "";
     selectTo.innerHTML = "";
     selectBorrarNodo.innerHTML = "";
     selectBorrarArista.innerHTML = "";
 
+    // Agregar opción por defecto
     selectFrom.innerHTML = `<option value="" selected>Seleccionar nodo</option>`;
     selectTo.innerHTML = `<option value="" selected>Seleccionar nodo</option>`;
     selectBorrarNodo.innerHTML = `<option value="" selected>Seleccionar nodo</option>`;
     selectBorrarArista.innerHTML = `<option value="" selected>Seleccionar arista</option>`;
 
+    // Agregar opciones de nodos a los selects
     nodes.forEach((node) => {
         var option = document.createElement("option");
         option.value = node.id;
@@ -125,6 +146,7 @@ function actualizarSelects() {
         selectBorrarNodo.appendChild(option);
     });
 
+    // Agregar opciones de aristas a los selects
     edges.forEach((edge) => {
         var option = document.createElement("option");
         option.value = edge.id;
@@ -134,6 +156,7 @@ function actualizarSelects() {
     });
 }
 
+// Cuando se hace un cambio en la información, se elimna el contenido de los inputs para evitar molestias
 function limpiarInputs() {
     var inputs = document.querySelectorAll("input");
 
