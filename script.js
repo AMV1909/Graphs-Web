@@ -34,7 +34,6 @@ var options = {
             align: "middle",
         },
         labelHighlightBold: true,
-        label: edges.weight,
     },
 };
 
@@ -59,8 +58,8 @@ document.getElementById("agregar-nodo").addEventListener("click", () => {
 document.getElementById("agregar-arista").addEventListener("click", () => {
     var from = Number(document.getElementById("from").value);
     var to = Number(document.getElementById("to").value);
-    var label = `Arista ${from} - ${to}`;
     var weight = Number(document.getElementById("weight").value);
+    var label = `${weight}`;
 
     // Validar que los inputs no estén vacíos
     if (!from || !to || !label || !weight) return;
@@ -150,7 +149,7 @@ function actualizarSelects() {
     edges.forEach((edge) => {
         var option = document.createElement("option");
         option.value = edge.id;
-        option.innerHTML = edge.label;
+        option.innerHTML = `Arista ${edge.from} - ${edge.to}`
 
         selectBorrarArista.appendChild(option);
     });
