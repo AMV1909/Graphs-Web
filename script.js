@@ -69,9 +69,24 @@ document.getElementById("agregar-arista").addEventListener("click", () => {
     // Haz que la arista tenga flecha para indicar la dirección
     var arrows = "to";
 
-    // Agregar arista
-    edges.add({ id, from, to, label, arrows });
-    
+    // Dale un color a la arista si ya existe una entre los mismos nodos
+    var color = undefined;
+    edges.forEach((edge) => {
+        if (
+            (edge.from == from && edge.to == to) ||
+            (edge.from == to && edge.to == from)
+        ) {
+            //
+            color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+        }
+    });
+
+    if (color) {
+        edges.add({ id, from, to, arrows, color, label });
+    } else {
+        edges.add({ id, from, to, arrows, label });
+    }
+
     actualizarSelects();
     limpiarInputs();
 });
