@@ -43,7 +43,7 @@ var network = new vis.Network(container, data, options);
 // Agregar nodo
 document.getElementById("agregar-nodo").addEventListener("click", () => {
     var id = Number(document.getElementById("id").value);
-    var label = `Nodo ${document.getElementById("label").value}`;
+    var label = document.getElementById("label").value;
 
     // Validar que los inputs no estén vacíos
     if (!id || !label) return;
@@ -66,8 +66,12 @@ document.getElementById("agregar-arista").addEventListener("click", () => {
 
     var id = edges.length + 1;
 
-    edges.add({ id, from, to, label, weight });
+    // Haz que la arista tenga flecha para indicar la dirección
+    var arrows = "to";
 
+    // Agregar arista
+    edges.add({ id, from, to, label, arrows });
+    
     actualizarSelects();
     limpiarInputs();
 });
@@ -149,7 +153,7 @@ function actualizarSelects() {
     edges.forEach((edge) => {
         var option = document.createElement("option");
         option.value = edge.id;
-        option.innerHTML = `Arista ${edge.from} - ${edge.to}`
+        option.innerHTML = `Arista ${edge.from} - ${edge.to}`;
 
         selectBorrarArista.appendChild(option);
     });
