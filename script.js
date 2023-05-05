@@ -73,22 +73,47 @@ document.getElementById("agregar-arista").addEventListener("click", () => {
     var arrows = "to";
 
     // Dale un color a la arista si ya existe una entre los mismos nodos
-    var color = undefined;
-    edges.forEach((edge) => {
-        if (
+    var color = edges.get().some((edge) => {
+        return (
             (edge.from == from && edge.to == to) ||
             (edge.from == to && edge.to == from)
-        ) {
-            //
-            color = "#" + Math.floor(Math.random() * 16777215).toString(16);
-        }
-    });
+        );
+    })
+        ? "red"
+        : "black";
 
-    if (color) {
-        edges.add({ id, from, to, arrows, color, label });
-    } else {
-        edges.add({ id, from, to, arrows, label });
-    }
+    edges.add({ id, from, to, arrows, color, label });
+
+    actualizarSelects();
+    limpiarInputs();
+});
+
+// Editar nodo
+document.getElementById("editar-nodo").addEventListener("click", () => {
+    var id = Number(document.getElementById("id").value);
+    var label = document.getElementById("label").value;
+
+    // Validar que los inputs no estén vacíos
+    if (!id || !label) return;
+
+    // Editar nodo
+    nodes.update({ id, label });
+
+    actualizarSelects();
+    limpiarInputs();
+});
+
+// Editar arista
+document.getElementById("editar-edge").addEventListener("click", () => {
+    var id = Number(document.getElementById("editar-arista").value);
+    var weight = Number(document.getElementById("editar-peso").value);
+    var label = `${weight}`;
+
+    // Validar que los inputs no estén vacíos
+    if (!id || !label || !weight) return;
+
+    // Editar arista
+    edges.update({ id, label });
 
     actualizarSelects();
     limpiarInputs();
@@ -135,45 +160,65 @@ document.getElementById("borrar-todo").addEventListener("click", () => {
 function actualizarSelects() {
     var selectFrom = document.getElementById("from");
     var selectTo = document.getElementById("to");
+    var selectEditarNodo = document.getElementById("editar-nodo");
+    var selectEditarArista = document.getElementById("editar-arista");
     var selectBorrarNodo = document.getElementById("borrar-nodo");
     var selectBorrarArista = document.getElementById("borrar-arista");
 
     // Vaciar las opciones de los selects
     selectFrom.innerHTML = "";
     selectTo.innerHTML = "";
+    selectEditarNodo.innerHTML = "";
+    selectEditarArista.innerHTML = "";
     selectBorrarNodo.innerHTML = "";
     selectBorrarArista.innerHTML = "";
 
     // Agregar opción por defecto
     selectFrom.innerHTML = `<option value="" selected>Seleccionar nodo</option>`;
     selectTo.innerHTML = `<option value="" selected>Seleccionar nodo</option>`;
+    selectEditarNodo.innerHTML = `<option value="" selected>Seleccionar nodo</option>`;
+    selectEditarArista.innerHTML = `<option value="" selected>Seleccionar arista</option>`;
     selectBorrarNodo.innerHTML = `<option value="" selected>Seleccionar nodo</option>`;
     selectBorrarArista.innerHTML = `<option value="" selected>Seleccionar arista</option>`;
 
     // Agregar opciones de nodos a los selects
     nodes.forEach((node) => {
-        var option = document.createElement("option");
-        option.value = node.id;
-        option.innerHTML = node.label;
+        var optionFrom = document.createElement("option");
+        var optionTo = document.createElement("option");
+        var optionEditarNodo = document.createElement("option");
+        var optionBorrarNodo = document.createElement("option");
 
-        selectFrom.appendChild(option);
-    });
+        optionFrom.value = node.id;
+        optionFrom.innerHTML = node.label;
 
-    nodes.forEach((node) => {
-        var option = document.createElement("option");
-        option.value = node.id;
-        option.innerHTML = node.label;
+        optionTo.value = node.id;
+        optionTo.innerHTML = node.label;
 
-        selectBorrarNodo.appendChild(option);
+        optionEditarNodo.value = node.id;
+        optionEditarNodo.innerHTML = node.label;
+
+        optionBorrarNodo.value = node.id;
+        optionBorrarNodo.innerHTML = node.label;
+
+        selectFrom.appendChild(optionFrom);
+        selectTo.appendChild(optionTo);
+        selectEditarNodo.appendChild(optionEditarNodo);
+        selectBorrarNodo.appendChild(optionBorrarNodo);
     });
 
     // Agregar opciones de aristas a los selects
     edges.forEach((edge) => {
-        var option = document.createElement("option");
-        option.value = edge.id;
-        option.innerHTML = `Arista ${edge.from} - ${edge.to}`;
+        var optionEditarArista = document.createElement("option");
+        var optionBorrarArista = document.createElement("option");
 
-        selectBorrarArista.appendChild(option);
+        optionEditarArista.value = edge.id;
+        optionEditarArista.innerHTML = edge.from + " - " + edge.to;
+
+        optionBorrarArista.value = edge.id;
+        optionBorrarArista.innerHTML = edge.from + " - " + edge.to;
+
+        selectEditarArista.appendChild(optionEditarArista);
+        selectBorrarArista.appendChild(optionBorrarArista);
     });
 }
 
