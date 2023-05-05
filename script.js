@@ -35,6 +35,9 @@ var options = {
         },
         labelHighlightBold: true,
     },
+    physics: {
+        enabled: false,
+    },
 };
 
 // Crear el grafo
