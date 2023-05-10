@@ -256,15 +256,15 @@ nodes.add([
 ]);
 
 edges.add([
-    { id: 1, from: "s", to: "1", label: "0/10", smooth: false },
-    { id: 2, from: "s", to: "2", label: "0/10", smooth: false },
-    { id: 3, from: "1", to: "2", label: "0/2", smooth: false },
-    { id: 4, from: "1", to: "3", label: "0/4", smooth: false },
-    { id: 5, from: "1", to: "4", label: "0/8", smooth: false },
-    { id: 6, from: "2", to: "4", label: "0/9", smooth: false },
-    { id: 7, from: "3", to: "t", label: "0/10", smooth: false },
-    { id: 8, from: "4", to: "3", label: "0/6", smooth: false },
-    { id: 9, from: "4", to: "t", label: "0/10", smooth: false },
+    { id: 1, from: "s", to: "1", arrows: "to", label: "0/10", smooth: false },
+    { id: 2, from: "s", to: "2", arrows: "to", label: "0/10", smooth: false },
+    { id: 3, from: "1", to: "2", arrows: "to", label: "0/2", smooth: false },
+    { id: 4, from: "1", to: "3", arrows: "to", label: "0/4", smooth: false },
+    { id: 5, from: "1", to: "4", arrows: "to", label: "0/8", smooth: false },
+    { id: 6, from: "2", to: "4", arrows: "to", label: "0/9", smooth: false },
+    { id: 7, from: "3", to: "t", arrows: "to", label: "0/10", smooth: false },
+    { id: 8, from: "4", to: "3", arrows: "to", label: "0/6", smooth: false },
+    { id: 9, from: "4", to: "t", arrows: "to", label: "0/10", smooth: false },
 ]);
 
 actualizarSelects();
