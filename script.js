@@ -45,7 +45,7 @@ var network = new vis.Network(container, data, options);
 
 // Agregar nodo
 document.getElementById("agregar-nodo").addEventListener("click", () => {
-    var id = Number(document.getElementById("id").value);
+    var id = document.getElementById("label").value;
     var label = document.getElementById("label").value;
 
     // Validar que los inputs no estén vacíos
@@ -59,9 +59,9 @@ document.getElementById("agregar-nodo").addEventListener("click", () => {
 
 // Agregar arista
 document.getElementById("agregar-arista").addEventListener("click", () => {
-    var from = Number(document.getElementById("from").value);
-    var to = Number(document.getElementById("to").value);
-    var weight = Number(document.getElementById("weight").value);
+    var from = document.getElementById("from").value;
+    var to = document.getElementById("to").value;
+    var weight = document.getElementById("weight").value;
     var label = `${weight}`;
 
     // Validar que los inputs no estén vacíos
@@ -72,17 +72,7 @@ document.getElementById("agregar-arista").addEventListener("click", () => {
     // Haz que la arista tenga flecha para indicar la dirección
     var arrows = "to";
 
-    // Dale un color a la arista si ya existe una entre los mismos nodos
-    var color = edges.get().some((edge) => {
-        return (
-            (edge.from == from && edge.to == to) ||
-            (edge.from == to && edge.to == from)
-        );
-    })
-        ? "red"
-        : "black";
-
-    edges.add({ id, from, to, arrows, color, label });
+    edges.add({ id, from, to, arrows, label, smooth: false });
 
     actualizarSelects();
     limpiarInputs();
@@ -106,7 +96,7 @@ document.getElementById("editar-nodo").addEventListener("click", () => {
 // Editar arista
 document.getElementById("editar-edge").addEventListener("click", () => {
     var id = Number(document.getElementById("editar-arista").value);
-    var weight = Number(document.getElementById("editar-peso").value);
+    var weight = document.getElementById("editar-peso").value;
     var label = `${weight}`;
 
     // Validar que los inputs no estén vacíos
@@ -255,3 +245,26 @@ document.getElementById("from").addEventListener("change", () => {
         ).innerHTML = `<option value="" selected>Seleccionar nodo</option>`;
     }
 });
+
+nodes.add([
+    { id: "s", label: "s", x: -200, y: 100 },
+    { id: "1", label: "1", x: 0, y: 0 },
+    { id: "2", label: "2", x: 0, y: 200 },
+    { id: "3", label: "3", x: 200, y: 0 },
+    { id: "4", label: "4", x: 200, y: 200 },
+    { id: "t", label: "t", x: 400, y: 100 },
+]);
+
+edges.add([
+    { id: 1, from: "s", to: "1", label: "0/10", smooth: false },
+    { id: 2, from: "s", to: "2", label: "0/10", smooth: false },
+    { id: 3, from: "1", to: "2", label: "0/2", smooth: false },
+    { id: 4, from: "1", to: "3", label: "0/4", smooth: false },
+    { id: 5, from: "1", to: "4", label: "0/8", smooth: false },
+    { id: 6, from: "2", to: "4", label: "0/9", smooth: false },
+    { id: 7, from: "3", to: "t", label: "0/10", smooth: false },
+    { id: 8, from: "4", to: "3", label: "0/6", smooth: false },
+    { id: 9, from: "4", to: "t", label: "0/10", smooth: false },
+]);
+
+actualizarSelects();
