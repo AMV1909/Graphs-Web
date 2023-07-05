@@ -49,7 +49,12 @@ document.getElementById("agregar-nodo").addEventListener("click", () => {
     var label = document.getElementById("label").value;
 
     // Validar que los inputs no estén vacíos
-    if (!id || !label) return;
+    if (!id || !label) return alert("Por favor ingrese un nombre para el nodo");
+
+    // Verificar que el nodo no exista
+    if (nodes.get().find((node) => node.id == id)) {
+        return alert("El nodo ya existe");
+    }
 
     nodes.add({ id, label });
 
@@ -65,7 +70,8 @@ document.getElementById("agregar-arista").addEventListener("click", () => {
     var label = `${weight}`;
 
     // Validar que los inputs no estén vacíos
-    if (!from || !to || !label || !weight) return;
+    if (!from || !to || !label || !weight)
+        return alert("Por favor ingrese todos los datos");
 
     var id = edges.length + 1;
 
@@ -79,12 +85,12 @@ document.getElementById("agregar-arista").addEventListener("click", () => {
 });
 
 // Editar nodo
-document.getElementById("editar-nodo").addEventListener("click", () => {
-    var id = Number(document.getElementById("id").value);
-    var label = document.getElementById("label").value;
+document.getElementById("editar-node").addEventListener("click", () => {
+    var id = Number(document.getElementById("editar-nodo").value);
+    var label = document.getElementById("editar-nombre").value;
 
     // Validar que los inputs no estén vacíos
-    if (!id || !label) return;
+    if (!id || !label) return alert("Por favor ingrese un nombre para el nodo");
 
     // Editar nodo
     nodes.update({ id, label });
@@ -100,7 +106,8 @@ document.getElementById("editar-edge").addEventListener("click", () => {
     var label = `${weight}`;
 
     // Validar que los inputs no estén vacíos
-    if (!id || !label || !weight) return;
+    if (!id || !label || !weight)
+        return alert("Por favor ingrese todos los datos");
 
     // Editar arista
     edges.update({ id, label });
@@ -111,10 +118,10 @@ document.getElementById("editar-edge").addEventListener("click", () => {
 
 // Borrar nodo
 document.getElementById("borrar-node").addEventListener("click", () => {
-    var id = Number(document.getElementById("borrar-nodo").value);
+    var id = document.getElementById("borrar-nodo").value;
 
     // Validar que los inputs no estén vacíos
-    if (!id) return;
+    if (!id) return alert("Por favor seleccione un nodo para borrar");
 
     // Remover nodo y aristas que lo contengan
     nodes.remove({ id });
@@ -130,7 +137,7 @@ document.getElementById("borrar-edge").addEventListener("click", () => {
     var id = Number(document.getElementById("borrar-arista").value);
 
     // Validar que los inputs no estén vacíos
-    if (!id) return;
+    if (!id) return alert("Por favor seleccione una arista para borrar");
 
     // Remover arista
     edges.remove({ id });
@@ -140,10 +147,11 @@ document.getElementById("borrar-edge").addEventListener("click", () => {
 
 // Borrar todo
 document.getElementById("borrar-todo").addEventListener("click", () => {
-    nodes.clear();
-    edges.clear();
-
-    actualizarSelects();
+    if (confirm("¿Está seguro de borrar todo?")) {
+        nodes.clear();
+        edges.clear();
+        actualizarSelects();
+    }
 });
 
 // Rellenar selects con nuevos datos
